@@ -1,10 +1,8 @@
-# Initiation à MPI
+# Answers of the TP 1
 
-Ce TP permet une initiation aux commandes de base de MPI.
+## Question 1
 
-## Rappels essentiels :
-
-   1. Pour lancer une exécution parallèle avec MPI :
+   1. Tester le programme avec 1 à 16 processus. Que constatez-vous ?
 
           mpiexec -np nbproc ./nom_executable
 

@@ -13,10 +13,22 @@ int main( int nargs, char* argv[] )
                   &numero_du_processus);
     MPI_Comm_size(MPI_COMM_WORLD, 
                   &nombre_de_processus);
+    
+    std::stringstream file_name;
+    file_name << "Output" 
+              << numero_du_processus << ".txt"; // on donne un nom de fichier txt pour l'écriture
+    std::ofstream fich(file_name.str()); // écrit vers le fichier file_name.str() de nom de var fich
+    fich << "Hello world from " 
+         << numero_du_processus << " in "
+         << nombre_de_processus << " executed" 
+         << std::endl; // on écrit dans le fichier
+    fich.close(); // on ferme écriture
+
+/*  output in console commented
     std::cout << "Bonjour, je suis  la tache n° " 
               << numero_du_processus << " sur "
               << nombre_de_processus << " taches" 
-              << std::endl;
+              << std::endl;*/
     MPI_Finalize();
     return EXIT_SUCCESS;
 }
