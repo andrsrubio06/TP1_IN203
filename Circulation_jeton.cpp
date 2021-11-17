@@ -22,32 +22,26 @@ int main( int argc, char* argv[] )
     if (rank == 0) prev = numTasks - 1;
     if (rank == (numTasks - 1)) next = 0;
 
-	MPI_Status status;
+	MPI_Request reqs;
+	MPI_Status stats;
 
 	int jeton;
 
-    if (rank == 0) {
-
-        jeton = initValue;
-        MPI_Send(&jeton, 1, MPI_INT, next, 0, MPI_COMM_WORLD);
-        MPI_Recv(&jeton, 1, MPI_INT, prev, 0, MPI_COMM_WORLD, &status);
-    
-	} else {
-        MPI_Recv(&jeton, 1, MPI_INT, prev, 0, MPI_COMM_WORLD, &status);
-        MPI_Send(&(++jeton), 1, MPI_INT, next, 0, MPI_COMM_WORLD);
-    }
-
-    if (rank == 0) {
-        std::cout 
+		jeton = initValue+rank;
+		
+        MPI_Isend(&jeton, 1, MPI_INT, next, 0, MPI_COMM_WORLD, &reqs);
+		MPI_Irecv(&jeton, 1, MPI_INT, prev, 0, MPI_COMM_WORLD, &reqs);
+        MPI_Wait(&reqs, &stats);
+        
+		std::cout 
 			<< std::endl
-            << "The final value of the jeton: " 
-            << jeton 
-            << ", initial value of the jeton:"
-            << initValue
+            << "This is the jeton: " 
+			<< jeton
+			<< " in the rank: "
+			<< rank
             << std::endl;
-    }
 
-
+		
 
 	MPI_Finalize();
 	return EXIT_SUCCESS;
