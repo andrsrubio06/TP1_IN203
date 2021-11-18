@@ -37,3 +37,5 @@ in this other type of sending, we do not have an order restriction, we have an a
 
 ### Circulation d’un jeton dans un anneau 
   
+no matter in which order the communication starts, once started it has the restriction of a blocking communication, waiting for process 0 to start, thus having our first value started.
+running the risk of receiving messages that have not been sent and creating problems with lost information, having to add a wait to the processes, the corresponding wait according to the step, so we can ensure that the processes will not make mistakes by accessing non-existent or erroneous information.

@@ -59,7 +59,7 @@ int main( int argc, char* argv[] )
 {
 
 	MPI_Init(&argc, &argv);
-    const double pi = 4 * approximate_pi(100000000);
+    const double pi = 4 * approximate_pi(1000000);
     MPI_Finalize();
     
     if(pi > 0){
