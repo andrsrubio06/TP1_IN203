@@ -1,38 +1,39 @@
 # Answers of the TP 1
 
-## Question 1
+## Un hello World parallèle
 
-   1. Tester le programme avec 1 à 16 processus. Que constatez-vous ?
+### Tester le programme avec 1 à 16 processus. Que constatez-vous ?
 
-          mpiexec -np nbproc ./nom_executable
+when using a single process, I noticed that its the same as sequential programming, and when switching to 16 processes, I could notice that the rank of the processes did not follow an order to execute.
 
-      où nbproc est le nombre de processus qui lanceront simultanément l'exécutable.
+### Notes of the modification in hello world
+The idea of having the different documents, it is more convenient because we can see in a more orderly way which is the rank that performed a certain task. We can have a more user-friendly visualization of the tasks.
 
-   2. Utiliser le Makefile fourni avec le TP, cela vous évitera (principalement pour ceux utilisant MSYS 2) une fastidieuse ligne de commande.
- 
-   3. Pour ceux ayant installé MSYS 2, bien penser à commenter dans le Makefile la ligne
-           
-        include Make.inc
+## Envoi bloquant et non bloquant
 
-      et décommenter la ligne
+### Envoi bloquant
+    myvar = 0;
+    for ( i = 1; i < numtasks , ++i ) {
+      task = i;
+        MPI_Send (& myvar ,... ,... , task ,...) ;
+        myvar = myvar + 2;
+        // Do some works
+    }
 
-        include Make_msys2.inc
+In the blocking type of sending we can ensure that the processes will wait for things to happen in order, without the problem of a process receiving a message that has not yet been sent.
 
-       Pour ceux ayant un Mac, penser également à commenter la ligne
+### Envoi non bloquant
+    
+    myvar = 0;
+    for ( i = 1; i < numtasks , ++i ) {
+      task = i;
+        MPI_ISend (& myvar ,... ,... , task ,...) ;
+        myvar = myvar + 2;
+        // Do some works
+        ...
+        MPI_Wait (...) ;
+    }
+in this other type of sending, we do not have an order restriction, we have an action that is performed by the first process to arrive, running the risk of receiving messages that have not been sent and creating problems with lost information, having to add a wait to the processes, the corresponding wait according to the step, so we can ensure that the processes will not make mistakes by accessing non-existent or erroneous information.
 
-        include Make.inc
-
-       et décommenter la ligne
-
-        include Make_osx.inc
-
-   4. Utiliser les fichiers SkeletonMPIProgram.cpp ou SkeletonMPIProgramWithFilesOutput.cpp comme canevas pour commencer votre programme MPI (conserver ces squelettes pour les prochaines sessions, ils seront utiles).
-
-   5. Lorsque vous mettez en oeuvre un algorithme en parallèle, ayez une vision locale du problème :
-
-        - Si je suis le processus de rang x, que dois-je faire ?
-        - J'envoie des messages à qui ?
-        - Je reçois des messages de qui ?
-
-      Par contre, lors de la mise au point de l'algorithme parallèle, il est nécessaire d'avoir une vision globale
-      de ce que font tous les processus !
+### Circulation d’un jeton dans un anneau 
+  
